@@ -2,53 +2,175 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>YouTube Accès + Admin</title>
+<title>YouTube Accès Protégé</title>
 <style>
-body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
-#container { max-width: 800px; margin: auto; }
-input, button { padding: 10px; font-size: 16px; margin: 5px 0; width: 80%; }
-#player { width: 100%; height: 450px; margin-top: 20px; display: none; }
-#info { margin-top: 10px; }
-#admin-panel { display: none; background: #eee; padding: 10px; margin-top: 20px; border-radius: 8px; }
+/* === Styles généraux === */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Header avec logo === */
+header {
+    background-color: #ff0000;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+header img {
+    height: 40px;
+    margin-right: 10px;
+}
+header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+/* === Login box === */
+#login-box {
+    max-width: 400px;
+    margin: 100px auto;
+    background: white;
+    padding: 30px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    text-align: center;
+}
+#login-box h2 {
+    margin-bottom: 20px;
+    color: #ff0000;
+}
+#login-box input, #login-box button {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+#login-box button {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+#login-box button:hover {
+    background-color: #cc0000;
+}
+
+/* === Contenu du site === */
+#container {
+    max-width: 900px;
+    margin: 40px auto;
+    display: none;
+    padding: 0 20px;
+}
+#container h2 {
+    color: #ff0000;
+    margin-bottom: 10px;
+}
+#container input, #container button {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    margin: 5px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+#container button {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+#container button:hover {
+    background-color: #cc0000;
+}
+#info {
+    margin-top: 20px;
+    text-align: center;
+}
+#info img {
+    border-radius: 8px;
+    margin-top: 10px;
+}
+#player {
+    width: 100%;
+    height: 500px;
+    margin-top: 20px;
+    border-radius: 12px;
+}
+
+/* === Footer === */
+footer {
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+    color: #777;
+    font-size: 14px;
+}
 </style>
 </head>
 <body>
+
+<!-- Header avec logo -->
+<header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="Logo YouTube">
+    <h1>Accès YouTube Protégé</h1>
+</header>
+
+<!-- Login -->
+<div id="login-box">
+    <h2>Connexion</h2>
+    <input type="password" id="site-password" placeholder="Mot de passe">
+    <button onclick="loginSite()">Entrer</button>
+    <p id="login-error" style="color:red;"></p>
+</div>
+
+<!-- Contenu principal -->
 <div id="container">
+    <h2>Coller le lien d'une vidéo YouTube</h2>
+    <input type="text" id="link" placeholder="https://www.youtube.com/watch?v=ID">
+    <button onclick="loadVideo()">Afficher</button>
 
-<h2>Coller le lien d'une vidéo YouTube</h2>
-<input type="text" id="link" placeholder="https://www.youtube.com/watch?v=ID">
-<button onclick="loadVideo()">Afficher</button>
-
-<div id="info"></div>
-<iframe id="player" frameborder="0" allowfullscreen></iframe>
-
-<hr>
-
-<h3>Accès Administrateur</h3>
-<input type="password" id="admin-password" placeholder="Mot de passe admin">
-<button onclick="loginAdmin()">Se connecter</button>
-
-<div id="admin-panel">
-    <h3>Panel Admin</h3>
-    <button onclick="generatePassword()">Générer un mot de passe court</button>
-    <p id="new-password"></p>
+    <div id="info"></div>
+    <iframe id="player" frameborder="0" allowfullscreen></iframe>
 </div>
 
-</div>
+<!-- Footer -->
+<footer>
+    © 2025 YouTube Accès Protégé
+</footer>
 
 <script>
+// ==== Mot de passe site ====
+const SITE_PASSWORD = "NDL114";
+
+function loginSite() {
+    const input = document.getElementById("site-password").value;
+    if(input === SITE_PASSWORD) {
+        document.getElementById("login-box").style.display = "none";
+        document.getElementById("container").style.display = "block";
+    } else {
+        document.getElementById("login-error").innerText = "Mot de passe incorrect !";
+    }
+}
+
 // ==== Lecteur YouTube ====
 function loadVideo() {
     const link = document.getElementById('link').value;
-    if (!link.includes("youtube.com/watch?v=") && !link.includes("youtu.be/")) {
+    if(!link.includes("youtube.com/watch?v=") && !link.includes("youtu.be/")) {
         alert("Lien YouTube invalide !");
         return;
     }
 
     let videoId;
-    if (link.includes("youtube.com/watch?v=")) {
+    if(link.includes("youtube.com/watch?v=")) {
         videoId = link.split("v=")[1].split("&")[0];
-    } else if (link.includes("youtu.be/")) {
+    } else if(link.includes("youtu.be/")) {
         videoId = link.split("youtu.be/")[1].split("?")[0];
     }
 
@@ -63,32 +185,6 @@ function loadVideo() {
         <p>ID de la vidéo : ${videoId}</p>
     `;
 }
-
-// ==== Accès Admin ====
-const ADMIN_PASSWORD = "rbn59114own";
-
-function loginAdmin() {
-    const input = document.getElementById("admin-password").value;
-    if (input === ADMIN_PASSWORD) {
-        alert("Connexion admin réussie !");
-        document.getElementById("admin-panel").style.display = "block";
-    } else {
-        alert("Mot de passe incorrect !");
-    }
-}
-
-// ==== Génération de mot de passe court ====
-function generatePassword() {
-    const mots = ["emma", "lola", "max", "ruby", "nova", "alex", "iris", "zoe"];
-    const mot = mots[Math.floor(Math.random() * mots.length)];
-
-    const chiffres = Math.floor(10000 + Math.random() * 90000); // 5 chiffres
-
-    const pass = mot + chiffres;
-
-    document.getElementById("new-password").innerText = "Nouveau mot de passe : " + pass;
-}
 </script>
-
 </body>
 </html>
