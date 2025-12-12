@@ -2,27 +2,42 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>YouTube Accès</title>
+<title>YouTube Accès + Admin</title>
 <style>
 body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
 #container { max-width: 800px; margin: auto; }
-input { width: 80%; padding: 10px; font-size: 16px; }
-button { padding: 10px; font-size: 16px; }
+input, button { padding: 10px; font-size: 16px; margin: 5px 0; width: 80%; }
 #player { width: 100%; height: 450px; margin-top: 20px; display: none; }
 #info { margin-top: 10px; }
+#admin-panel { display: none; background: #eee; padding: 10px; margin-top: 20px; border-radius: 8px; }
 </style>
 </head>
 <body>
 <div id="container">
+
 <h2>Coller le lien d'une vidéo YouTube</h2>
 <input type="text" id="link" placeholder="https://www.youtube.com/watch?v=ID">
 <button onclick="loadVideo()">Afficher</button>
 
 <div id="info"></div>
 <iframe id="player" frameborder="0" allowfullscreen></iframe>
+
+<hr>
+
+<h3>Accès Administrateur</h3>
+<input type="password" id="admin-password" placeholder="Mot de passe admin">
+<button onclick="loginAdmin()">Se connecter</button>
+
+<div id="admin-panel">
+    <h3>Panel Admin</h3>
+    <button onclick="generatePassword()">Générer un mot de passe court</button>
+    <p id="new-password"></p>
+</div>
+
 </div>
 
 <script>
+// ==== Lecteur YouTube ====
 function loadVideo() {
     const link = document.getElementById('link').value;
     if (!link.includes("youtube.com/watch?v=") && !link.includes("youtu.be/")) {
@@ -41,7 +56,6 @@ function loadVideo() {
     player.style.display = "block";
     player.src = "https://www.youtube.com/embed/" + videoId;
 
-    // Affichage titre et miniature (mini interface simple)
     const thumbnail = "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
     document.getElementById('info').innerHTML = `
         <h3>Vidéo sélectionnée</h3>
@@ -49,6 +63,32 @@ function loadVideo() {
         <p>ID de la vidéo : ${videoId}</p>
     `;
 }
+
+// ==== Accès Admin ====
+const ADMIN_PASSWORD = "rbn59114own";
+
+function loginAdmin() {
+    const input = document.getElementById("admin-password").value;
+    if (input === ADMIN_PASSWORD) {
+        alert("Connexion admin réussie !");
+        document.getElementById("admin-panel").style.display = "block";
+    } else {
+        alert("Mot de passe incorrect !");
+    }
+}
+
+// ==== Génération de mot de passe court ====
+function generatePassword() {
+    const mots = ["emma", "lola", "max", "ruby", "nova", "alex", "iris", "zoe"];
+    const mot = mots[Math.floor(Math.random() * mots.length)];
+
+    const chiffres = Math.floor(10000 + Math.random() * 90000); // 5 chiffres
+
+    const pass = mot + chiffres;
+
+    document.getElementById("new-password").innerText = "Nouveau mot de passe : " + pass;
+}
 </script>
+
 </body>
 </html>
