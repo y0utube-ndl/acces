@@ -1,49 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Recherche Musique</title>
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        input { width: 300px; padding: 10px; }
-        button { padding: 10px; }
-        iframe { width: 100%; height: 400px; margin-top: 20px; display: none; }
-    </style>
+<meta charset="UTF-8">
+<title>YouTube Accès</title>
+<style>
+body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+#container { max-width: 800px; margin: auto; }
+input { width: 80%; padding: 10px; font-size: 16px; }
+button { padding: 10px; font-size: 16px; }
+#player { width: 100%; height: 450px; margin-top: 20px; display: none; }
+#info { margin-top: 10px; }
+</style>
 </head>
 <body>
+<div id="container">
+<h2>Coller le lien d'une vidéo YouTube</h2>
+<input type="text" id="link" placeholder="https://www.youtube.com/watch?v=ID">
+<button onclick="loadVideo()">Afficher</button>
 
-<h2>Recherche une musique :</h2>
-
-<input type="text" id="song" placeholder="Nom de la musique">
-<button onclick="search()">Rechercher</button>
-
-<iframe id="player" allowfullscreen></iframe>
+<div id="info"></div>
+<iframe id="player" frameborder="0" allowfullscreen></iframe>
+</div>
 
 <script>
-async function search() {
-    let query = document.getElementById("song").value;
-
-    // recherche sur DuckDuckGo
-    let url = `https://duckduckgo.com/html/?q=${encodeURIComponent(query + " youtube")}`;
-
-    let html = await (await fetch(url)).text();
-
-    // on cherche le premier lien YouTube dans les résultats
-    let match = html.match(/https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]+/);
-
-    if (!match) {
-        alert("Aucune vidéo trouvée.");
+function loadVideo() {
+    const link = document.getElementById('link').value;
+    if (!link.includes("youtube.com/watch?v=") && !link.includes("youtu.be/")) {
+        alert("Lien YouTube invalide !");
         return;
     }
 
-    let videoUrl = match[0];
-    let videoId = videoUrl.split("v=")[1];
+    let videoId;
+    if (link.includes("youtube.com/watch?v=")) {
+        videoId = link.split("v=")[1].split("&")[0];
+    } else if (link.includes("youtu.be/")) {
+        videoId = link.split("youtu.be/")[1].split("?")[0];
+    }
 
-    let player = document.getElementById("player");
+    const player = document.getElementById('player');
     player.style.display = "block";
     player.src = "https://www.youtube.com/embed/" + videoId;
+
+    // Affichage titre et miniature (mini interface simple)
+    const thumbnail = "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
+    document.getElementById('info').innerHTML = `
+        <h3>Vidéo sélectionnée</h3>
+        <img src="${thumbnail}" width="320"><br>
+        <p>ID de la vidéo : ${videoId}</p>
+    `;
 }
 </script>
-
 </body>
 </html>
